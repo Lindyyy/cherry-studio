@@ -365,15 +365,9 @@ export default class OpenAIProvider extends BaseProvider {
       max_tokens: 1000
     })
 
-    // 防御性写法
-    const firstChoice = response.data?.choices?.;
-    if (!firstChoice) {
-      throw new Error('API 返回数据中缺少 choices 数组或数组为空');
-    }
-
     // 针对思考类模型的返回，总结仅截取</think>之后的内容
     // let content = response.choices[0].message?.content || ''
-    let content = response.data?.choices[0].message || ''
+    let content = response.choices[0].message || ''
     content = content.replace(/^<think>(.*?)<\/think>/s, '')
 
     return removeSpecialCharacters(content.substring(0, 50))
