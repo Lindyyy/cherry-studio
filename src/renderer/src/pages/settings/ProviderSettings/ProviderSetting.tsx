@@ -161,7 +161,7 @@ const ProviderSetting: FC<Props> = ({ provider: _provider }) => {
     }
 
     // return (apiHost.endsWith('/') ? apiHost : `${apiHost}/v1/`) + 'chat/completions'
-    return (apiHost.endsWith('/') ? apiHost : `${apiHost}`)'
+    return (apiHost.endsWith('/') ? apiHost : `${apiHost}`)
   }
 
   const onUpdateModelTypes = (model: Model, types: ModelType[]) => {
