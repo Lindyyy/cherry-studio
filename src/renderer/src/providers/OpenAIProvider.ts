@@ -235,7 +235,7 @@ export default class OpenAIProvider extends BaseProvider {
       ...getOpenAIWebSearchParams(assistant, model),
       ...this.getProviderSpecificParameters(assistant, model),
       ...this.getCustomParameters(assistant)
-    })
+    }).then(res => this.handleAPIResponse(res)) as ChatCompletion
 
     if (!isSupportStreamOutput()) {
       const time_completion_millsec = new Date().getTime() - start_time_millsec
@@ -323,7 +323,7 @@ export default class OpenAIProvider extends BaseProvider {
       stream,
       keep_alive: this.keepAliveTime,
       temperature: assistant?.settings?.temperature
-    })
+    }).then(res => this.handleAPIResponse(res)) as OpenAI.ChatCompletion
 
     if (!stream) {
       return response.choices[0].message?.content || ''
@@ -371,11 +371,11 @@ export default class OpenAIProvider extends BaseProvider {
       stream: false,
       keep_alive: this.keepAliveTime,
       max_tokens: 1000
-    }).then(res => this.handleAPIResponse(res))
+    }).then(res => this.handleAPIResponse(res)) as OpenAI.ChatCompletion
 
     // 针对思考类模型的返回，总结仅截取</think>之后的内容
-    // let content = response.choices[0].message?.content || ''
-    let content = response.choices[0].message || ''
+    let content = response.choices[0].message?.content || ''
+    // let content = response.choices[0].message || ''
     content = content.replace(/^<think>(.*?)<\/think>/s, '')
 
     return removeSpecialCharacters(content.substring(0, 50))
