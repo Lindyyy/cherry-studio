@@ -366,7 +366,8 @@ export default class OpenAIProvider extends BaseProvider {
     })
 
     // 针对思考类模型的返回，总结仅截取</think>之后的内容
-    let content = response.choices[0].message?.content || ''
+    // let content = response.choices[0].message?.content || ''
+    let content = response.data.choices[0].message || ''
     content = content.replace(/^<think>(.*?)<\/think>/s, '')
 
     return removeSpecialCharacters(content.substring(0, 50))
@@ -384,7 +385,8 @@ export default class OpenAIProvider extends BaseProvider {
       ]
     })
 
-    return response.choices[0].message?.content || ''
+    // return response.choices[0].message?.content || ''
+    return response.data.choices[0].message || ''
   }
 
   async suggestions(messages: Message[], assistant: Assistant): Promise<Suggestion[]> {
@@ -424,7 +426,7 @@ export default class OpenAIProvider extends BaseProvider {
       const response = await this.sdk.chat.completions.create(body as ChatCompletionCreateParamsNonStreaming)
 
       return {
-        valid: Boolean(response?.choices[0].message),
+        valid: Boolean(response?.data.choices[0].message),
         error: null
       }
     } catch (error: any) {
