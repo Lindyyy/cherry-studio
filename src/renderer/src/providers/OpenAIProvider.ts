@@ -20,6 +20,14 @@ import BaseProvider from './BaseProvider'
 export default class OpenAIProvider extends BaseProvider {
   private sdk: OpenAI
 
+  private handleAPIResponse<T>(response: any): T {
+    // 类型安全校验
+    if (!response?.data) {
+      throw new Error('Invalid API response structure: missing data field')
+    }
+    return response.data
+  }
+
   constructor(provider: Provider) {
     super(provider)
 
@@ -363,7 +371,7 @@ export default class OpenAIProvider extends BaseProvider {
       stream: false,
       keep_alive: this.keepAliveTime,
       max_tokens: 1000
-    })
+    }).then(res => this.handleAPIResponse(res))
 
     // 针对思考类模型的返回，总结仅截取</think>之后的内容
     // let content = response.choices[0].message?.content || ''
